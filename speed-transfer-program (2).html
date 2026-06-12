@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speed Transfer Program · 12 to Single Digits</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Literata:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #f4f1eb;
+  --deep: #edeae2;
+  --surface: #e6e2d8;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.09);
+  --border-bright: rgba(0,0,0,0.16);
+  --volt: #2a6e1e;
+  --volt-dim: rgba(42,110,30,0.1);
+  --volt-glow: rgba(42,110,30,0.06);
+  --white: #1a1c18;
+  --mid: #3d4238;
+  --faint: #8a9080;
+  --red: #b83a1e;
+  --red-dim: rgba(184,58,30,0.09);
+  --amber: #8a5a10;
+  --amber-dim: rgba(138,90,16,0.09);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--void);
+  color: var(--white);
+  font-family: 'Literata', serif;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 24px 100px;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 56px 0 40px;
+  border-bottom: 1px solid var(--border-bright);
+  margin-bottom: 40px;
+}
+
+.h-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.h-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 14px;
+  opacity: 0.8;
+}
+
+.h-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 9vw, 108px);
+  line-height: 0.92;
+  letter-spacing: 1px;
+  color: #1a1c18;
+}
+
+.h-title span { color: var(--volt); }
+
+.h-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--border-bright);
+  background: #2a2e28;
+  min-width: 180px;
+  flex-shrink: 0;
+}
+
+.h-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #8a9080;
+  line-height: 1.9;
+}
+
+.h-stat strong {
+  color: #8fcc6a;
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.diagnosis-bar {
+  background: var(--red-dim);
+  border: 1px solid rgba(184,58,30,0.25);
+  padding: 16px 22px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #2a1510;
+  border-left: 3px solid var(--red);
+}
+
+.diagnosis-bar strong { color: #1a0d0a; }
+
+/* ── NAV ── */
+.nav {
+  display: flex;
+  gap: 2px;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: 4px;
+  margin-bottom: 44px;
+  overflow-x: auto;
+}
+
+.nb {
+  flex: 1;
+  min-width: 100px;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--faint);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.nb:hover { color: var(--mid); background: rgba(255,255,255,0.04); }
+.nb.active { background: var(--volt); color: #ffffff; font-weight: 500; }
+
+/* ── SECTIONS ── */
+.sec { display: none; }
+.sec.active { display: block; animation: up 0.25s ease both; }
+@keyframes up { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── TYPE ── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1;
+  letter-spacing: 0.5px;
+  color: var(--white);
+  margin-bottom: 14px;
+}
+
+.lead {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--mid);
+  max-width: 640px;
+  margin-bottom: 36px;
+  border-left: 2px solid var(--volt);
+  padding-left: 18px;
+}
+
+/* ── CARDS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 14px; }
+
+@media (max-width: 620px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 22px;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.cv .card::before { background: var(--volt); }
+.cr .card::before { background: var(--red); }
+.ca .card::before { background: var(--amber); }
+
+.card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.card-body {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--mid);
+}
+
+/* ── CALLOUT ── */
+.callout {
+  padding: 22px 24px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #1a1c18;
+}
+
+.callout.volt { background: var(--volt-glow); border: 1px solid rgba(42,110,30,0.2); border-left: 3px solid var(--volt); }
+.callout.red { background: var(--red-dim); border: 1px solid rgba(184,58,30,0.2); border-left: 3px solid var(--red); }
+.callout.amber { background: var(--amber-dim); border: 1px solid rgba(138,90,16,0.2); border-left: 3px solid var(--amber); }
+
+.callout-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.callout.volt .callout-label { color: var(--volt); }
+.callout.red .callout-label { color: var(--red); }
+.callout.amber .callout-label { color: var(--amber); }
+
+/* ── PHASE BLOCK ── */
+.phase {
+  border: 1px solid var(--border-bright);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.phase-head {
+  background: #2a2e28;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  border-bottom: 1px solid var(--border-bright);
+  flex-wrap: wrap;
+}
+
+.phase-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #8fcc6a;
+  margin-bottom: 6px;
+  opacity: 0.9;
+}
+
+.phase-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  letter-spacing: 0.5px;
+  color: #f0f0ec;
+  line-height: 1;
+}
+
+.phase-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #8a9080;
+  line-height: 2;
+  text-align: right;
+}
+
+.phase-body { padding: 24px; }
+
+.phase-goal {
+  background: var(--volt-glow);
+  border-left: 2px solid var(--volt);
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--mid);
+  margin-bottom: 22px;
+  font-style: italic;
+}
+
+/* ── DRILL GRID ── */
+.drills {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.drill {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-top: 2px solid var(--volt);
+}
+
+.drill.red-top { border-top-color: var(--red); }
+.drill.amber-top { border-top-color: var(--amber); }
+
+.drill-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 7px;
+  line-height: 1.3;
+}
+
+.drill-body {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--mid);
+}
+
+.dtag {
+  display: inline-block;
+  margin-top: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+}
+
+.dtag.v { background: var(--volt-dim); color: var(--volt); }
+.dtag.r { background: var(--red-dim); color: var(--red); }
+.dtag.a { background: var(--amber-dim); color: var(--amber); }
+
+/* ── TABLE ── */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 28px;
+  font-size: 13px;
+}
+
+.tbl th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-bright);
+  background: var(--surface);
+}
+
+.tbl td {
+  padding: 13px 14px;
+  color: var(--mid);
+  border-bottom: 1px solid var(--border);
+  line-height: 1.55;
+  vertical-align: top;
+}
+
+.tbl td:first-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--volt);
+  white-space: nowrap;
+  width: 90px;
+}
+
+.tbl td strong { color: var(--white); }
+.tbl tr:last-child td { border-bottom: none; }
+
+/* ── CHECKLIST ── */
+.cklist { list-style: none; }
+.cklist li {
+  font-size: 13px;
+  color: var(--mid);
+  padding: 9px 0 9px 22px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  line-height: 1.65;
+}
+.cklist li:last-child { border-bottom: none; }
+.cklist li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--volt);
+  font-size: 16px;
+  line-height: 1.4;
+}
+.cklist li strong { color: var(--white); }
+
+/* ── STEPS ── */
+.steps { counter-reset: step; }
+.step {
+  display: flex;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+  counter-increment: step;
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--volt);
+  opacity: 0.3;
+  flex-shrink: 0;
+  width: 36px;
+  line-height: 1;
+  padding-top: 2px;
+}
+.step-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 5px;
+}
+.step-body {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--mid);
+}
+
+/* ── RULE ── */
+hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+/* ── NUMBER STAT ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+.stat-cell {
+  background: var(--card);
+  padding: 20px 16px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--volt);
+  line-height: 1;
+  margin-bottom: 6px;
+}.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+.stat-note { font-size: 11px; color: var(--faint); line-height: 1.5; }
+
+@media (max-width: 560px) {
+  .stat-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="h-top">
+      <div>
+        <div class="h-eyebrow">Speed Transfer Program · 12 to Single Digits</div>
+        <div class="h-title">Speed on<br>the <span>Range.</span><br>Speed on<br>the <span>Course.</span></div>
+      </div>
+      <div class="h-stats">
+        <div class="h-stat">Current HCP<strong>12</strong></div>
+        <div class="h-stat">Goal<strong>Single Digit</strong></div>
+        <div class="h-stat">Problem<strong>Speed Won't Transfer</strong></div>
+        <div class="h-stat">Sessions<strong>1–2x / Week</strong></div>
+      </div>
+    </div>
+    <div class="diagnosis-bar">
+      <strong>Your exact situation:</strong> You've gained real speed this off-season. You understand your miss. Distance isn't the issue. But the first time you took the new swing on the course, it fell apart. That's not a swing problem — it's a <strong>transfer problem.</strong> This program fixes exactly that. <strong>Note: New driver running a backup shaft (not correct spec) — driver work is back in the program but carry distances are provisional until correct shaft arrives ~June.</strong>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <button class="nb active" onclick="show('diagnosis',this)">Diagnosis</button>
+    <button class="nb" onclick="show('protocol',this)">Protocol</button>
+    <button class="nb" onclick="show('return',this)">Return Plan</button>
+    <button class="nb" onclick="show('sessions',this)">Sessions</button>
+    <button class="nb" onclick="show('wedges',this)">Wedges</button>
+    <button class="nb" onclick="show('course',this)">On-Course</button>
+    <button class="nb" onclick="show('scoring',this)">Scoring Edge</button>
+  </nav>
+
+  <!-- ══════════════ DIAGNOSIS ══════════════ -->
+  <div id="diagnosis" class="sec active">
+    <div class="eyebrow">What Actually Happened</div>
+    <div class="sec-title">Why Your Speed Stayed on the Range</div>
+    <div class="lead">Speed training works by overloading the system — forcing your body to move faster than it's used to. The problem is, that new speed was earned in a controlled, feedback-rich environment with no consequences. The course is the opposite of that.</div>
+
+    <div class="callout red">
+      <div class="callout-label">The Core Issue</div>
+      Speed training changes your sequencing, tempo, and the feel of a "normal" swing. When you got to the course, your brain reverted to the old pattern — the one that felt safe and familiar under pressure. The new speed hadn't been stress-tested. This is extremely common and completely fixable.
+    </div>
+
+    <div class="grid-2 cv">
+      <div class="card">
+        <div class="card-label">What Trackman Gave You</div>
+        <div class="card-title">A Controlled Environment With Every Variable Removed</div>
+        <div class="card-body">Same mat. Same target. Instant feedback. No OB. No playing partners. No score. Your nervous system learned to swing fast in a zero-pressure setting — which is totally different from the first tee of a new course.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">What the Course Demanded</div>
+        <div class="card-title">A New Swing Under Conditions Your Brain Hadn't Seen Yet</div>
+        <div class="card-body">Different lie. Real consequences. No data. A score to protect. Under stress, your brain defaults to the pattern it trusts most — the old one. The new, faster swing hadn't earned that trust yet.</div>
+      </div>
+    </div>
+
+    <div class="grid-3 ca">
+      <div class="card">
+        <div class="card-label">Transfer Problem #1</div>
+        <div class="card-title">Tempo Mismatch</div>
+        <div class="card-body">Speed training typically shortens the backswing or rushes transition. On the course, without Trackman confirming ball speed, you unconsciously "braked" before impact to feel in control.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Transfer Problem #2</div>
+        <div class="card-title">No Pressure Rehearsal</div>
+        <div class="card-body">The new swing was never tested under any stakes. The range is practice — but practice without simulated pressure doesn't prepare you for real pressure.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Transfer Problem #3</div>
+        <div class="card-title">Feel Hasn't Caught Up</div>
+        <div class="card-body">The faster swing feels "too much" without the screen confirming it's working. On the course that feeling reads as danger, so you back off. You're not trusting what you've built.</div>
+      </div>
+    </div>
+
+    <div class="callout volt">
+      <div class="callout-label">The Good News</div>
+      The speed is real. It's in there. This program is not about rebuilding anything — it's about convincing your brain that the new swing is safe to use when it matters. That requires structured pressure rehearsal, deliberate feedback removal, and specific on-course protocols. All of which follow.
+    </div>
+  </div>
+
+  <!-- ══════════════ PROTOCOL ══════════════ -->
+  <div id="protocol" class="sec">
+    <div class="eyebrow">12-Week Transfer Protocol</div>
+    <div class="sec-title">Three Phases to Own Your Speed</div>
+    <div class="lead">You don't need more speed work. You need to convince your nervous system the new swing is trustworthy. These three phases do exactly that — progressively, and within a 1–2 session per week schedule.</div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Phase One · Weeks 1–3</div>
+          <div class="phase-name">Anchor the New Swing</div>
+        </div>
+        <div class="phase-meta">Focus: Feel + Tempo<br>Trackman: Data on<br>1–2 sessions/week</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">You gained speed — now you need to own it. This phase is about establishing what "fast but controlled" feels like, linking that feel to a specific tempo cue, and making the new swing repeatable before removing feedback.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">The Tempo Anchor</div>
+            <div class="drill-body">Find your new swing's tempo ratio (typically 3:1 backswing-to-downswing). Use a count or verbal cue: "load… fire." Hit 20 balls locking in this cue. This becomes your on-course trigger later.</div>
+            <span class="dtag v">Tempo</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Speed Stacking</div>
+            <div class="drill-body">Hit 5 balls at 70% speed, 5 at 85%, 5 at 100%, 5 at 110% (overspeed). Watch ball speed on Trackman. The goal: your 85% swing should be nearly as fast as your 100%. That's your course swing.</div>
+            <span class="dtag v">Speed</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Ball Speed Baseline Reset</div>
+            <div class="drill-body">Re-record your carry distances at the new ball speed. Your old yardage chart is outdated. You may be carrying it 10–20 yards farther than you think — which changes club selection on every hole.</div>
+            <span class="dtag a">Distance</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Miss Pattern Recheck</div>
+            <div class="drill-body">Speed changes attack angle and face timing. Run a 15-ball dispersion check with your 7i and driver. Has your miss shifted with the new head? Dispersion and start line data are valid even with the backup shaft — carry numbers are provisional until June.</div>
+            <span class="dtag a">Dispersion</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Identify the "Trust Zone"</div>
+            <div class="drill-body">Find the effort level where you feel fully in control AND ball speed is near max. For most players this is 88–92%. Name this feeling. It becomes your default swing thought on the course.</div>
+            <span class="dtag v">Feel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Phase Two · Weeks 4–7</div>
+          <div class="phase-name">Stress-Test the Swing</div>
+        </div>
+        <div class="phase-meta">Focus: Pressure + Process<br>Trackman: Verify only<br>1 session no-data</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">The new swing has never been tested under pressure. That ends now. Every drill this phase introduces some form of consequence, distraction, or uncertainty — the exact conditions that broke down your swing on the course.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">Consequence Sets</div>
+            <div class="drill-body">Set a rule before each 5-ball block: if you miss left, restart the set. Low stakes, but real. The moment there's a consequence, you'll feel your brain want to "protect" — that's the transfer training happening.</div>
+            <span class="dtag r">Pressure</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">One-Ball, Full Routine</div>
+            <div class="drill-body">No second chances. One ball, full pre-shot routine, full commitment. If you wouldn't re-hit it on the course, don't re-hit it here. This is the single most important practice habit for transfer.</div>
+            <span class="dtag r">Commitment</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Screen-Off Driver, 3W & Hybrid Blocks</div>
+            <div class="drill-body">5 drivers, 5 x 3W, 5 x hybrid. Screen turned away. Tempo cue, commit, swing. Read your own ball flight. Driver carry numbers are provisional with the backup shaft — focus on whether the speed and tempo feel transferred, not the distance.</div>
+            <span class="dtag v">No Feedback</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Distraction Protocol</div>
+            <div class="drill-body">Hit 10 balls while a playing partner talks to you, or while you count down from 20. This replicates the mental noise of the first tee — forces the swing into autopilot where the training lives.</div>
+            <span class="dtag r">Pressure</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Simulated First Tee</div>
+            <div class="drill-body">Once per session: step away from the bay, take a full minute "between shots," then step back up to your 3W like it's the first tee. Full routine. No warm-up swing. Replicate that exact moment. Driver is out until June — 3W is your tee club for pressure rehearsal until then.</div>
+            <span class="dtag r">Course Sim</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Phase Three · Weeks 8–12</div>
+          <div class="phase-name">Own It on the Course</div>
+        </div>
+        <div class="phase-meta">Focus: Execution<br>Trackman: 1x/week check<br>On-course rounds required</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">The swing is stress-tested. Now close the loop on the course. Not casual rounds — structured rounds with specific tasks tied to your new speed. One Trackman session per week to confirm nothing has drifted.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">The Tempo Cue Round</div>
+            <div class="drill-body">Play 9 holes with one and only one swing thought: your tempo anchor cue from Phase 1. No mechanics. No corrections. Every shot — full routine, cue, commit. Score is irrelevant. Process is everything.</div>
+            <span class="dtag v">On-Course</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">New Yardage Deployment</div>
+            <div class="drill-body">Every approach shot: use your updated carry chart from Phase 1. Trust the numbers. If you're hitting more club to the same pins, that's not wrong — that's the new speed working. Don't second-guess it.</div>
+            <span class="dtag a">Distance</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Post-Round Speed Audit</div>
+            <div class="drill-body">After each round, note: how many tee shots felt like "full speed"? How many felt like you braked? What triggered the braking — a tight hole, a bad lie, a bad shot prior? This is your transfer data.</div>
+            <span class="dtag a">Review</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Weekly Trackman Verification</div>
+            <div class="drill-body">10 x driver, 10 x 3W, 10 x 7i. Track ball speed and smash factor week to week — driver carry is provisional until correct shaft arrives in June. If ball speed drops more than 2 mph from last session, one focused speed session to find the leak.</div>
+            <span class="dtag v">Maintenance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ RETURN TO PLAY ══════════════ -->
+  <div id="return" class="sec">
+    <div class="eyebrow">MCL Return-to-Play · 3 Weeks</div>
+    <div class="sec-title">Back Up to Speed,<br><em>Without Going Backwards</em></div>
+    <div class="lead">You're 20 days out, feeling close to normal, and haven't swung much yet. The goal of the next 3 weeks is simple: establish a new baseline, rebuild swing load progressively, and protect the MCL from a setback that costs you more time than the original injury.</div>
+
+    <div class="callout red">
+      <div class="callout-label">Before You Start — Read This</div>
+      The MCL stabilizes the knee against rotational and lateral stress — exactly what a golf swing produces at the left knee through impact. Feeling "close to normal" in daily life is not the same as being ready for full swing load. The plan below is deliberately conservative in week 1. If you feel any sharp pain, instability, or swelling after swinging — stop immediately and get it checked. Do not push through joint pain to protect a practice schedule.
+    </div>
+
+    <!-- WEEK 1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Week 1 · Complete ✓</div>
+          <div class="phase-name">Assessment & Gentle Load</div>
+        </div>
+        <div class="phase-meta">2 x 1hr sessions<br>Wedges only<br>Done</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">Completed. Two 1-hour sessions, wedges only — exactly the right approach. Low rotational load, controlled effort, let the knee respond. The wedge-only format kept MCL stress minimal while re-establishing feel and contact. Clear to progress to Week 2.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">What Was Done</div>
+            <div class="drill-body">Two 1-hour sessions with wedges only. No full swings, no long irons, no speed work. Smart load management for a 20-day MCL injury.</div>
+            <span class="dtag v">Complete ✓</span>
+          </div>
+          <div class="drill amber-top">
+            <div class="drill-name">What to Watch Going Into Week 2</div>
+            <div class="drill-body">Any residual stiffness or swelling after last week's sessions? If the knee felt clean throughout, you're clear for progressive loading. If there's any lingering discomfort, hold at Week 1 protocol for one more session before moving on.</div>
+            <span class="dtag a">Check Before Proceeding</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Week 2 · Complete ✓</div>
+          <div class="phase-name">Build Swing Speed Carefully</div>
+        </div>
+        <div class="phase-meta">Saturday session<br>Ramped to 100%<br>Felt good — done</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">Completed ahead of schedule. Hit balls Saturday, felt good, and ramped all the way back to 100% effort — no issues. That's a strong response at 3.5 weeks post-injury. Clear to move straight into Week 3 and return to the full program structure including Stack Speed.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">What Was Done</div>
+            <div class="drill-body">Saturday session, full effort by end of session. Knee responded well. No reported pain, instability, or compensation issues.</div>
+            <span class="dtag v">Complete ✓</span>
+          </div>
+          <div class="drill amber-top">
+            <div class="drill-name">Compensation Pattern Identified: Ball Going Left</div>
+            <div class="drill-body">Limited rotation through the ball — brain protecting the left knee at impact, face closing relative to path. Not a technique fault — a load management response. As knee confidence returns and you drive through impact fully, this self-corrects. Watch for it in Week 3: if the miss is still left at full effort, rotation isn't fully back yet.</div>
+            <span class="dtag a">Watch in Week 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 3 -->
+    <div class="phase" style="border:2px solid var(--volt);">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Week 3 · This Weekend ← YOU ARE HERE</div>
+          <div class="phase-name">Reintroduce Stack Speed</div>
+        </div>
+        <div class="phase-meta">2 hours<br>Stack Speed back in<br>Full baseline reset</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">If weeks 1 and 2 were pain-free and your numbers are back near baseline — you're cleared to return to the full program structure. Stack Speed comes back in, but at a reduced protocol for the first session. Full effort irons and driver. Establish your post-injury baseline and compare to pre-injury numbers to see what the speed work needs to recover.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">Stack Warm-Up (5 min)</div>
+            <div class="drill-body">Run the full Stack app warm-up protocol before speed work. Non-negotiable — especially on the first session back with the overspeed training.</div>
+            <span class="dtag a">Warm-Up</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Stack Speed — Reduced Protocol (20 min)</div>
+            <div class="drill-body">Return to Stack Speed but at a reduced workload for week 1 back — follow the Stack app guidance on returning after a break. Don't try to pick up where you left off. The speed will come back faster than you think, but the MCL needs one session of lighter overspeed load before going full protocol.</div>
+            <span class="dtag v">Stack Speed</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Full Baseline Reset (30 min)</div>
+            <div class="drill-body">Wedges through driver, Trackman on, full effort. Record ball speed and carry for every club. <strong>Key check this session:</strong> is the ball still going left? Watch side spin and start line on Trackman — if you're seeing left starts with negative side spin at full effort, rotation through impact isn't fully back yet. It'll resolve over the next 1–2 sessions as the knee builds confidence. Don't try to fix it mechanically — just note it and let the body catch up.</div>
+            <span class="dtag v">Full Baseline</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Stack Wedge Session (20 min)</div>
+            <div class="drill-body">Full Stack & Radar wedge protocol. Compare to your pre-injury wedge distances — this is the most sensitive indicator of whether sequencing has fully returned.</div>
+            <span class="dtag v">Stack Wedge</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Simulate a Full Round (35 min)</div>
+            <div class="drill-body">Full effort, full routine, every club. Screen off. This is your return-to-play test — if you can get through 18 simulated holes with full commitment and no compensation in the swing, you're back in the main program. Note anything that still feels restricted and flag it for the Phase 1 sessions that follow.</div>
+            <span class="dtag r">Return Test</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout volt">
+      <div class="callout-label">After Week 3 — Back to the Main Program</div>
+      If all three weeks are clean — no pain, no swelling, numbers close to baseline — you slot back into Phase 1 of the main program. The speed work you built before the injury doesn't disappear in 3 weeks; it fades but it comes back quickly with consistent Stack sessions. Expect 3–4 weeks to be fully back at pre-injury ball speeds. The transfer work picks up exactly where you left off.
+    </div>
+
+  </div>
+
+  <!-- ══════════════ SESSIONS ══════════════ -->
+  <div id="sessions" class="sec">
+    <div class="eyebrow">Weekly Session Structure</div>
+    <div class="sec-title">One 2-Hour Session,<br>Every Weekend</div>
+    <div class="lead">Two hours once a week is a focused, high-quality practice block. The structure below keeps it consistent — same skeleton every week, but the technical focus rotates by phase so you're always moving forward. Stack wedge is non-negotiable every session.</div>
+
+    <div class="callout volt">
+      <div class="callout-label">The Standing Structure — Every Session</div>
+      Stack Speed → Ball-striking warm-up (wedges through 6i) → Stack Wedge → Full round simulation. Same framework every week — the phase only changes what happens inside the simulation block.
+    </div>
+
+    <!-- PRE-SESSION CHECK-IN -->
+    <div class="card" style="margin-bottom:20px; background:var(--card); border-top:2px solid var(--red);">
+      <div style="padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:20px;">
+        <div class="card-label" style="color:var(--red);">Before Every Session · Non-Negotiable</div>
+        <div class="card-title" style="margin-bottom:4px;">Pre-Session Check-In</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:1px;">5 MIN · BEFORE YOU HIT A BALL</div>
+      </div>
+      <p style="font-size:13px;color:var(--mid);margin-bottom:20px;line-height:1.7;">Three questions. Answer honestly before you touch a club.</p>
+
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+
+        <div style="border:1px solid var(--border);border-left:3px solid var(--red);padding:14px 16px;background:var(--void);">
+          <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:8px;">① Am I present?</div>
+          <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.6;">Is my head actually here, or am I carrying something in from outside?</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:120px;background:var(--volt-dim);border:1px solid rgba(42,110,30,0.2);padding:8px 12px;border-radius:2px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--volt);margin-bottom:3px;">YES</div>
+              <div style="font-size:12px;color:var(--mid);">Proceed as planned</div>
+            </div>
+            <div style="flex:1;min-width:120px;background:var(--red-dim);border:1px solid rgba(184,58,30,0.15);padding:8px 12px;border-radius:2px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:3px;">NO</div>
+              <div style="font-size:12px;color:var(--mid);">Pivot to feel/simulation only. No data collection today</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--border);border-left:3px solid var(--red);padding:14px 16px;background:var(--void);">
+          <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:8px;">② Am I striking it?</div>
+          <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.6;">After 5 warm-up balls, does contact feel solid and repeatable?</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:120px;background:var(--volt-dim);border:1px solid rgba(42,110,30,0.2);padding:8px 12px;border-radius:2px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--volt);margin-bottom:3px;">YES</div>
+              <div style="font-size:12px;color:var(--mid);">Proceed with data work</div>
+            </div>
+            <div style="flex:1;min-width:120px;background:var(--red-dim);border:1px solid rgba(184,58,30,0.15);padding:8px 12px;border-radius:2px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:3px;">NO</div>
+              <div style="font-size:12px;color:var(--mid);">Skip baseline testing. Stack + simulation only today</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--border);border-left:3px solid var(--red);padding:14px 16px;background:var(--void);">
+          <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:8px;">③ Did I do the Stack warm-up?</div>
+          <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.6;">The Stack app has a specific warm-up protocol before speed work. Did you run it?</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:120px;background:var(--volt-dim);border:1px solid rgba(42,110,30,0.2);padding:8px 12px;border-radius:2px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--volt);margin-bottom:3px;">YES</div>
+              <div style="font-size:12px;color:var(--mid);">Proceed to Stack Speed</div>
+            </div>
+            <div style="flex:1;min-width:120px;background:var(--red-dim);border:1px solid rgba(184,58,30,0.15);padding:8px 12px;border-radius:2px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:3px;">NO</div>
+              <div style="font-size:12px;color:var(--mid);">Stop. Do the Stack warm-up now before anything else</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="background:var(--red-dim);border:1px solid rgba(184,58,30,0.2);border-left:3px solid var(--red);padding:14px 16px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:8px;">The Rule</div>
+        <div style="font-size:13px;color:var(--mid);line-height:1.7;">If distracted or not striking it — skip data collection, not the session. Stack Speed + simulation is still a productive two hours. Bad baseline data is worse than no data. The 58° partial mapping can always wait one more week.</div>
+      </div>
+    </div>
+
+    <!-- THIS WEEKEND -->
+    <div class="card" style="margin-bottom:20px; background:var(--card); border:2px solid var(--volt);">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:18px; flex-wrap:wrap;">
+        <div>
+          <div class="card-label" style="color:var(--volt);">This Weekend · One-Time Remap Session</div>
+          <div class="card-title" style="margin-bottom:0;">Full Distance Baseline</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--volt);letter-spacing:1px;">120 MIN · FULL DATA</div>
+      </div>
+      <p style="font-size:13px;color:var(--mid);margin-bottom:18px;line-height:1.7;">Before the weekly program begins, you need current numbers across the whole bag. This session is pure data collection — no simulation, no pressure work. Come out with every distance confirmed at the new swing speed.</p>
+      <table class="tbl">
+        <tr><th>Time</th><th>Activity</th><th>Goal</th></tr>
+        <tr><td>0–10 min</td><td><strong>Loose warm-up</strong> — half swings, PW only, no data, feel tempo</td><td>Activation</td></tr>
+        <tr><td>10–30 min</td><td><strong>48° SM10 full remap</strong> — 5 balls full, 5 at 75%, 5 at 50%. Rest between blocks. Anchor task</td><td>48° Confirmed</td></tr>
+        <tr><td>30–45 min</td><td><strong>58° partial distances</strong> — 10 balls: 50% carry and clock-face landmarks (7, 9 o'clock). Max capped at 75 yds</td><td>LW System Complete</td></tr>
+        <tr><td>45–60 min</td><td><strong>PW partial mapping</strong> — 5 balls at 75%, 5 at 50%. The 75% number fills your 108–138 gap — the most important number you leave with</td><td>Gap Zone Solved</td></tr>
+        <tr><td>60–75 min</td><td><strong>3W confirmed ✓</strong> — 244 yds carry, 153.5 mph ball speed, 1.47 smash, confirmed on-course. Remove from remap list. Hybrid still needs mapping — 5 balls full and 5 at 75%</td><td>Hybrid Mapping</td></tr>
+        <tr><td>75–85 min</td><td><strong>Irons spot check</strong> — 5 balls each: 7i and 9i. Confirm carry hasn't shifted from your app numbers</td><td>Iron Verification</td></tr>
+        <tr><td>85–100 min</td><td><strong>Stack wedge session</strong> — 20 min full Stack & Radar wedge protocol. Follow exactly as prescribed</td><td>Stack Wedge</td></tr>
+        <tr><td>100–115 min</td><td><strong>Stack Speed session</strong> — 25 min Stack & Radar speed protocol. This session only: treat as a warm re-entry to the speed program with all your distance data fresh in mind</td><td>Stack Speed</td></tr>
+        <tr><td>115–120 min</td><td><strong>Log everything</strong> — update your distance card with every confirmed number. Photograph it</td><td>Documentation</td></tr>
+      </table>
+      <div class="callout volt" style="margin-top:18px;margin-bottom:0;">
+        <div class="callout-label">Confirmed So Far · Open Items Remaining</div>
+        GW (48°) confirmed at 117.7 yds ✓ · 3W mat carry 244 yds (est. 234–236 real turf) ⚠ needs on-course verify · PW full carry 138 yds ✓ · SW full carry 96 yds ✓ · 58° max cap 75 yds ✓. Still needed: PW 75% partial · GW 75% partial · 58° 50% carry · Hybrid full and 75% · SW and GW 50% carries.
+      </div>
+    </div>
+
+    <!-- PHASE 1 WEEKLY -->
+    <div class="card cv" style="margin-bottom:16px; background:var(--card)">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:18px; flex-wrap:wrap;">
+        <div>
+          <div class="card-label">Phase 1 Weekly Session · Weeks 1–3</div>
+          <div class="card-title" style="margin-bottom:0;">Anchor the New Swing</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--volt);letter-spacing:1px;">120 MIN · DATA ON</div>
+      </div>
+      <p style="font-size:13px;color:var(--mid);margin-bottom:18px;line-height:1.7;">Stack Speed → warm-up → Stack Wedge → sim. Data on for the warm-up and technical blocks. One focus per session — tempo cue, Predict & Verify, or miss pattern. Don't try to fix everything at once.</p>
+      <table class="tbl">
+        <tr><th>Time</th><th>Activity</th></tr>
+        <tr><td>0–5 min</td><td><strong>Stack warm-up</strong> — run the Stack app warm-up protocol. Non-negotiable before speed work</td></tr>
+        <tr><td>5–30 min</td><td><strong>Stack Speed session</strong> — 25 min Stack & Radar speed protocol. Follow exactly as prescribed</td></tr>
+        <tr><td>30–60 min</td><td><strong>Ball-striking warm-up</strong> — wedges through 6i, 25–30 balls. Feel the tempo cue on every swing. Data on — Predict & Verify: call your carry before each look. Goal: within 5 yards by week 3</td></tr>
+        <tr><td>60–80 min</td><td><strong>Stack Wedge session</strong> — 20 min Stack & Radar wedge protocol. Follow exactly as prescribed</td></tr>
+        <tr><td>80–115 min</td><td><strong>Simulate a full round</strong> — every club, full routine on every shot, no second balls. Data on but screen only checked after committing. Score by process quality</td></tr>
+        <tr><td>115–120 min</td><td><strong>Log one thing</strong> — what did the data confirm? What felt different from before the speed work?</td></tr>
+      </table>
+    </div>
+
+    <!-- PHASE 2 WEEKLY -->
+    <div class="card" style="margin-bottom:16px; background:var(--card); border-top:2px solid var(--amber);">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:18px; flex-wrap:wrap;">
+        <div>
+          <div class="card-label">Phase 2 Weekly Session · Weeks 4–7</div>
+          <div class="card-title" style="margin-bottom:0;">Stress-Test the Swing</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:1px;">120 MIN · SCREEN OFF</div>
+      </div>
+      <p style="font-size:13px;color:var(--mid);margin-bottom:18px;line-height:1.7;">Same structure — Stack Speed → warm-up → Stack Wedge → sim. Screen off from the warm-up block onward. No technical work, no data. The new swing is built — now stress-test it.</p>
+      <table class="tbl">
+        <tr><th>Time</th><th>Activity</th></tr>
+        <tr><td>0–5 min</td><td><strong>Stack warm-up</strong> — run the Stack app warm-up protocol. Every session, every time</td></tr>
+        <tr><td>5–30 min</td><td><strong>Stack Speed session</strong> — 25 min Stack & Radar speed protocol. Goal this phase: speed starts feeling normal, not effortful</td></tr>
+        <tr><td>30–60 min</td><td><strong>Ball-striking warm-up</strong> — wedges through 6i, 25–30 balls, screen off. Tempo cue every swing. Add consequence sets: miss the wrong side = restart the 5-ball block. This is where pressure rehearsal begins</td></tr>
+        <tr><td>60–80 min</td><td><strong>Stack Wedge session</strong> — 20 min Stack & Radar wedge protocol. Note if distances hold up compared to Phase 1 — pressure affects wedge feel too</td></tr>
+        <tr><td>80–115 min</td><td><strong>Simulate a full round</strong> — screen off, every club, full routine. 3 first-tee reps with driver before starting (full reset, walk up cold, no warm-up swing). Score by process: did you commit? Did the tempo cue fire?</td></tr>
+        <tr><td>115–120 min</td><td><strong>Log one thing</strong> — when did you brake? What triggered it? One pattern only</td></tr>
+      </table>
+    </div>
+
+    <!-- PHASE 3 WEEKLY -->
+    <div class="card cr" style="margin-bottom:28px; background:var(--card)">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:18px; flex-wrap:wrap;">
+        <div>
+          <div class="card-label">Phase 3 Weekly Session · Weeks 8–12</div>
+          <div class="card-title" style="margin-bottom:0;">Own It</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);letter-spacing:1px;">120 MIN · PROCESS FOCUS</div>
+      </div>
+      <p style="font-size:13px;color:var(--mid);margin-bottom:18px;line-height:1.7;">Same structure as always. Quick Trackman check in the warm-up block, then screen off for the rest. The technical work is done — this phase is purely about owning the process.</p>
+      <table class="tbl">
+        <tr><th>Time</th><th>Activity</th></tr>
+        <tr><td>0–5 min</td><td><strong>Stack warm-up</strong> — run the Stack app warm-up protocol. Every session, every time</td></tr>
+        <tr><td>5–30 min</td><td><strong>Stack Speed session</strong> — 25 min Stack & Radar speed protocol. Phase 3: this is maintenance. The speed is there, you're just keeping it sharp</td></tr>
+        <tr><td>30–60 min</td><td><strong>Ball-striking warm-up + verification</strong> — wedges through 6i, 25–30 balls. First 10 balls: data on, confirm driver ball speed and 7i carry are holding at baseline. Remaining balls: screen off, feel only. If anything has drifted, note it — one fix maximum</td></tr>
+        <tr><td>60–80 min</td><td><strong>Stack Wedge session</strong> — 20 min Stack & Radar wedge protocol</td></tr>
+        <tr><td>80–115 min</td><td><strong>Simulate a full round</strong> — screen off, every club, full routine. Score by process. This is the session that most directly reflects what you'll do on the course</td></tr>
+        <tr><td>115–120 min</td><td><strong>Log one win + one focus area</strong> — carry into the week's round</td></tr>
+      </table>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-label">The Two Stack Blocks Are Non-Negotiable</div>
+      Every session opens with 25 minutes of Stack Speed and closes with 20 minutes of Stack Wedge — 45 minutes total, every week, regardless of phase. The speed block keeps your gains from regressing. The wedge block builds the scoring-zone precision that converts those gains into lower scores. Neither gets skipped.
+    </div>
+  </div>
+
+  <!-- ══════════════ WEDGES ══════════════ -->
+  <div id="wedges" class="sec">
+    <div class="eyebrow">Wedge Distance Control</div>
+    <div class="sec-title">The Scoring Zone:<br>40–120 Yards</div>
+    <div class="lead">Your new speed means longer drives and shorter approaches — but only if your wedge game can convert those opportunities. Distance control inside 120 yards is the most direct path from 12 to single digits. This is where shots are actually saved.</div>
+
+    <div class="callout amber">
+      <div class="callout-label">Why Wedge Distance Control Is Different Now</div>
+      Speed training primarily affects your full swing. But added speed changes your sequencing and tempo throughout the bag — including your wedges. Many players find their partial wedge distances have shifted after a speed block. Before drilling, re-baseline all your wedge distances at the new swing speed. Don't assume your old 80-yard number is still your 80-yard number.
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Foundation · Weeks 1–3</div>
+          <div class="phase-name">Build Your Wedge Distance Map</div>
+        </div>
+        <div class="phase-meta">Trackman on<br>Every wedge club<br>3 swing speeds</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">Before you can control distance, you need an accurate, current map of what each wedge at each effort level actually carries. Not what you think it carries — what Trackman says it carries. This is your scoring system.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">The 3-Speed Matrix</div>
+            <div class="drill-body">For each wedge (PW, GW, SW, LW): hit 5 balls at 50%, 75%, and full swing. Record average carry at each speed. You now have 12 reliable distances instead of 4. This is your on-course decision tree.</div>
+            <span class="dtag v">Data Collection</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Clock Face Drill</div>
+            <div class="drill-body">Use arm position as a distance cue: 7 o'clock backswing = short, 9 o'clock = mid, 10 o'clock = full. Hit 10 balls at each position with your SW. Record the carry. Repeat with GW. You're building feel anchors tied to specific distances.</div>
+            <span class="dtag v">Feel System</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Spin Rate Check</div>
+            <div class="drill-body">With new swing speed, your spin rates may have changed. Check your 100-yard SW spin on Trackman — if it's dropped below 6,500 RPM, you're losing stopping power. Note how this affects where you need to land the ball vs. where you want it to finish.</div>
+            <span class="dtag a">Trackman</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Gap Identification</div>
+            <div class="drill-body">After logging the matrix, find the distances that don't fit neatly into a club/speed combo. For most players there are 2–3 "awkward" yardages (e.g. 67 yards, 88 yards). These are your practice priorities — not your comfortable distances.</div>
+            <span class="dtag a">Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Development · Weeks 4–7</div>
+          <div class="phase-name">Train the Hard Distances</div>
+        </div>
+        <div class="phase-meta">Trackman: verify only<br>Focus on gaps<br>Feel-first</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">Don't practice your comfortable wedge distances — you're already good at those. Practice the awkward yardages, the in-between numbers, and replicating your distances without looking at the data first.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">Dead-Yardage Drill</div>
+            <div class="drill-body">Pick a specific target distance (e.g. 73 yards). Hit 10 balls trying to land exactly on that number using any wedge at any speed. Check Trackman after each one. Goal: 8 of 10 within 5 yards. Then move to your next gap distance.</div>
+            <span class="dtag v">Precision</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Predict & Land</div>
+            <div class="drill-body">Before each wedge shot, call your intended carry distance out loud. Then swing. Check Trackman. Track how often your actual carry matches your intention. This trains the feel-to-distance link that makes you deadly inside 100 yards.</div>
+            <span class="dtag v">Feel Transfer</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Ladder Drill</div>
+            <div class="drill-body">Set 5 targets at 10-yard intervals (50, 60, 70, 80, 90 yds). Hit one ball to each in order — no re-hits. Score: within 3 yds = 2 pts, within 6 yds = 1 pt. Target: 7+ pts per round. This replicates the one-shot reality of the course.</div>
+            <span class="dtag r">Pressure</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Screen-Off Landing Zone</div>
+            <div class="drill-body">Turn Trackman off. Pick a target. Commit to a specific club and speed. Hit the shot, watch it land, estimate the carry. Then check. This is how you train wedge feel that works on the course — where there's no screen.</div>
+            <span class="dtag r">No Feedback</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Wind Adjustment Practice</div>
+            <div class="drill-body">On windy range days: pick a target, estimate wind effect, adjust your club/speed selection, then check if your landing was as planned. Single-digit players know their wedges work in wind. Most 12s don't practice this.</div>
+            <span class="dtag a">Course Conditions</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <div>
+          <div class="phase-label">Integration · Weeks 8–12</div>
+          <div class="phase-name">Pressure & Course Transfer</div>
+        </div>
+        <div class="phase-meta">Trackman: maintenance<br>Games + simulation<br>On-course tracking</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">Distance control only counts if it holds up under pressure. This phase puts your wedge game in competitive situations — and gives you specific on-course tasks to track whether it's transferring.</div>
+        <div class="drills">
+          <div class="drill">
+            <div class="drill-name">The Par-5 Layup Game</div>
+            <div class="drill-body">Simulate a par-5 third shot scenario: you have a specific wedge distance. One ball only. Full routine. Score: inside 10 ft = birdie chance, inside 20 ft = good, outside = bogey. Play 10 "holes." Beat your previous score.</div>
+            <span class="dtag r">Pressure</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">On-Course Wedge Tracking</div>
+            <div class="drill-body">For 4 rounds, track every wedge shot from inside 120 yards: intended distance, actual carry (estimated), and result (short/long/on). After 4 rounds, find your worst-performing yardage band and focus the next session there.</div>
+            <span class="dtag a">Data</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">The Tournament Drill</div>
+            <div class="drill-body">10 wedge shots, one to each of 10 randomized targets (40–115 yds). One ball each. Full routine. No mulligans. Score yourself 1–10 on proximity. This is your benchmark — run it once in Phase 1 and again at week 12 to measure improvement.</div>
+            <span class="dtag r">Benchmark</span>
+          </div>
+          <div class="drill">
+            <div class="drill-name">Pre-Round Wedge Calibration</div>
+            <div class="drill-body">5 minutes before every round: hit 6 wedge shots — two at 50%, two at 75%, two full. Don't try to fix anything. Just feel the distances for that day's conditions and temperature. File it. Use it on the course.</div>
+            <span class="dtag v">Routine</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="eyebrow" style="margin-bottom:14px;">Your Wedge Distance Card</div>
+    <table class="tbl">
+      <tr><th>Club</th><th>Loft</th><th>50% Carry</th><th>75% Carry</th><th>Full Carry</th><th>Gap to Next</th><th>Priority Zone</th></tr>
+      <tr><td>PW (T200)</td><td>43°</td><td>~97 yds</td><td>~117 yds</td><td><strong>138 yds ✓</strong></td><td>20 yds</td><td>120–138 yds</td></tr>
+      <tr><td>GW (SM10)</td><td>48°</td><td>~82 yds</td><td>~100 yds</td><td><strong>117.7 yds ✓</strong></td><td>22 yds</td><td>100–118 yds</td></tr>
+      <tr><td>SW (SM10)</td><td>54°</td><td>~67 yds</td><td>~81 yds</td><td><strong>96 yds ✓</strong></td><td>21 yds</td><td>78–96 yds</td></tr>
+      <tr><td>LW (RTX)</td><td>58°</td><td>— yds</td><td><strong>75 yds ✓ (cap)</strong></td><td>79 yds full avg ⚠</td><td>—</td><td>40–75 yds</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--faint);margin-bottom:28px;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;">✓ = confirmed on Trackman · ⚠ = full swing avg confirmed but not used — too inconsistent · LW intentionally capped at 75 yds · 50%/75% estimates based on confirmed full carries</p>
+
+    <div class="callout volt">
+      <div class="callout-label">Your Wedge System Is Now Well-Gapped</div>
+      With the 48° confirmed at 117.7 yards, your gaps are clean: PW (138) → GW (117.7) → SW (96) → LW (75 max). Each club covers roughly 20 yards, which is a well-structured system. The old 30-yard gap is gone. Your priority now shifts to confirming the 75% carries for PW and GW — those partial distances are what you'll actually use on approach shots from 100–120 yards, which is your most common scoring zone with your driver length.
+    </div>
+    <div class="callout volt">
+      <div class="callout-label">Your 75-Yard Cap on the 58° Is Validated by the Data</div>
+      Full swings average 79 yards but carry a ±3.3 yard variance — and that's on a controlled range. On the course it'll be wider. Shot #1 went 85.4, shot #3 went 75.2 — a 10-yard spread on full swings is not a reliable distance club. Your decision to cap it at 75 and use it as a feel/partial club is exactly right. The 2.7R side spin also shows the full swing introduces face instability you don't want inside 80 yards. Next priority: map your 50% carry so you have a reliable low-end anchor for the 40–55 yard range.
+    </div>
+  </div>
+
+  <!-- ══════════════ ON-COURSE ══════════════ -->
+  <div id="course" class="sec">
+    <div class="eyebrow">On-Course Execution</div>
+    <div class="sec-title">The Protocols That Keep Your Speed Alive</div>
+    <div class="lead">Once you're on the course, your technical brain needs to be completely offline. These are the specific tools — a pre-round warm-up cap, a pre-shot routine, a speed cue, and a post-shot process — that keep the new swing accessible under pressure.</div>
+
+    <div class="callout red">
+      <div class="callout-label">⚠ The Range Before a Round Is Not a Practice Session</div>
+      70 balls in the heat before a round will drain you before you reach the 7th hole — exactly what happened at Marine Park. Pre-round warm-up has one job: activate the body and confirm feel for the day. Leave the practice for the weekly session.
+    </div>
+
+    <div class="card" style="background:var(--card);margin-bottom:20px;">
+      <div class="card-label">Every Pre-Round · Hard Cap: 20–25 Balls</div>
+      <div class="card-title" style="margin-bottom:16px;">The Activation Warm-Up</div>
+      <table class="tbl">
+        <tr><th>Time</th><th>Activity</th><th>Purpose</th></tr>
+        <tr><td>0–5 min</td><td><strong>Physical warm-up</strong> — walking, hip circles, slow-motion practice swings. Body temperature up before touching a ball</td><td>Activation</td></tr>
+        <tr><td>5–10 min</td><td><strong>6 wedge shots</strong> — 50%, 75%, full. One each with SW and GW. Note if the ball is flying long or short vs. your distance card for today's conditions</td><td>Distance calibration</td></tr>
+        <tr><td>10–15 min</td><td><strong>6 iron shots</strong> — 7i and 5i, easy tempo. Confirm contact feels solid. If it doesn't — accept it, don't chase it on the range. You will not fix it there</td><td>Contact check</td></tr>
+        <tr><td>15–18 min</td><td><strong>4 driver swings</strong> — tempo cue only. Not fixing anything. Feel the swing and walk away</td><td>Tempo confirmation</td></tr>
+        <tr><td>18–25 min</td><td><strong>Putting green</strong> — 5 ft, 10 ft, 20 ft. Get the pace of the greens. More valuable than any extra range ball</td><td>Green speed</td></tr>
+      </table>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-label">In the Heat — Cut It Even Further</div>
+      Hot conditions accelerate fatigue. On hot days cap the range warm-up at 15 balls maximum and spend the saved time in the shade drinking water. Arriving at the first tee physically fresh is worth more than any extra swing rep. Holes 1–6 at Marine Park before the heat caught up showed exactly the level you're capable of — protect that by not burning resources before you tee off.
+    </div>
+
+    <div class="callout red">
+      <div class="callout-label">What Killed Your Speed Last Trip</div>
+      Most likely: you got tight on the first tee, took a controlled swing to "find it," hit a mediocre drive, and then spent the rest of the round trying to manage your way around the course on the old swing. The fix is a pre-shot routine that bypasses that protective instinct before it can fire.
+    </div>
+
+    <div class="card" style="background:var(--card); margin-bottom:20px;">
+      <div class="card-label">Pre-Shot Routine · Your Transfer Mechanism</div>
+      <div class="card-title">The 5-Step Process That Unlocks Your Speed</div>
+      <div class="steps" style="margin-top:16px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Read & Commit to a Target</div>
+            <div class="step-body">Not "the fairway" — a specific spot. A tree, a discoloration, a landmark 30 yards wide. The more specific, the less room for doubt. Doubt is what triggers braking.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Use Your Updated Yardage Chart</div>
+            <div class="step-body">New swing = new distances. Commit to the number. If you're debating between 6i and 7i, take more club and swing freely — a committed 6i beats a tentative 7i every time.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Say Your Tempo Cue</div>
+            <div class="step-body">Out loud or internally — say the exact cue you built in Phase 1. "Load… fire." "Long… fast." Whatever it is. This is your on-ramp to the new swing. It bypasses the protective override.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">One Practice Swing That Feels Like the Shot</div>
+            <div class="step-body">Not a gentle maintenance swing — the actual speed of the shot you're about to hit. Feel the tempo cue. If it doesn't feel right, reset and try again. Don't step in until the practice swing felt fast.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-title">Step In and Pull the Trigger Within 5 Seconds</div>
+            <div class="step-body">No more thinking. The decision is made. Your only job is to swing with the same feel as that practice swing. Trust it. The speed is in there — this routine is how you get to it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card ca" style="background:var(--card)">
+        <div class="card-label">When You Brake Mid-Swing</div>
+        <div class="card-title">Recognize It. Reset. Don't Chase It.</div>
+        <div class="card-body">If you feel yourself decelerate — don't swing harder on the next shot to compensate. That just adds a new variable. Reset your routine. Tempo cue. One practice swing that felt fast. Then go. Braking happens. The routine is the answer.</div>
+      </div>
+      <div class="card cr" style="background:var(--card)">
+        <div class="card-label">On Tight Tee Shots</div>
+        <div class="card-title">This Is Where It Goes Wrong</div>
+        <div class="card-body">Narrow fairways trigger the protective instinct most. Counter it: aim your miss pattern into the safe side of the fairway, then swing at your 85% trust swing — not 70%. The goal is committed, not controlled.</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="eyebrow" style="margin-bottom:12px;">Post-Shot Protocol</div>
+    <ul class="cklist">
+      <li><strong>Fast or braked?</strong> — honest internal rating: did you swing at your new speed or back off?</li>
+      <li><strong>If braked: what triggered it?</strong> — tight hole, bad lie, bad last shot, playing partner watching? Note the pattern</li>
+      <li><strong>Read the miss by ball flight</strong> — start line = face angle; curve = face-to-path; height = contact quality</li>
+      <li><strong>One thought, then move on</strong> — either "that's the new swing" (reinforce) or "reset the routine next time" (correct)</li>
+      <li><strong>Never carry a bad shot to the next tee</strong> — the new swing doesn't need protecting. It needs repeating</li>
+    </ul>
+  </div>
+
+  <!-- ══════════════ SCORING ══════════════ -->
+  <div id="scoring" class="sec">
+    <div class="eyebrow">12 to Single Digits</div>
+    <div class="sec-title">Where the Shots Actually Come From</div>
+    <div class="lead">You already hit it far enough. Speed transfer is the engine — but getting from 12 to single digits requires knowing exactly which parts of your game are leaking the most shots, and fixing those alongside the speed work.</div>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="stat-num">3–4</div>
+        <div class="stat-label">Shots</div>
+        <div class="stat-note">Saved by eliminating 3-putts from inside 20 ft</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">2–3</div>
+        <div class="stat-label">Shots</div>
+        <div class="stat-note">From wedge distance control: stopping it closer from 40–120 yds</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Shots</div>
+        <div class="stat-note">From avoiding one blow-up hole per round</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">1–2</div>
+        <div class="stat-label">Shots</div>
+        <div class="stat-note">From better club selection using new carry data</div>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-label">Driver: Backup Shaft In Play · Carry Numbers Provisional</div>
+      Driver work is back in the program with a backup shaft. Use this period for routine building, tempo transfer, pressure reps, and dispersion work — all of that transfers regardless of shaft spec. Do not anchor to carry distance numbers until the correct shaft arrives in June. Ball speed and smash factor are still meaningful data points. When the spec shaft arrives, run a full driver baseline session and update all numbers.
+    </div>
+
+    <div class="callout volt">
+      <div class="callout-label">The Single-Digit Reality Check</div>
+      Going from 12 to 8 is not about more distance — you're already long enough. It's about: (1) executing your approach play more consistently with the new distances, (2) getting up-and-down more often, and (3) eliminating the one or two big numbers per round. The speed gives you shorter irons in. Now you have to use them.
+    </div>
+
+    <div class="grid-2">
+      <div class="card cv" style="background:var(--card)">
+        <div class="card-label">Speed Transfer · Range Confirmed</div>
+        <div class="card-title">3W: 244 Yards Carry (Mat, 1mm Tee)</div>
+        <div class="card-body">104.6 mph club speed, 153.5 mph ball speed, 1.47 smash factor. Measured off a mat with a 1mm tee — expect 8–10 yards less from a tight fairway lie, putting your real-turf carry closer to 234–236 yards. <strong>With new driver delayed until ~June, 3W is your primary tee club.</strong> On-course carry verification is a priority — log actual carry the next time you stripe one from a fairway lie.</div>
+      </div>
+      <div class="card ca" style="background:var(--card)">
+        <div class="card-label">Scoring Priority</div>
+        <div class="card-title">Short Game + 50–80 Yard Zone</div>
+        <div class="card-body">Single-digit players get up-and-down about 50% of the time from greenside. 12-handicappers: around 30%. That 20-point gap is 2–3 shots a round. Pair your speed work with 15 minutes of short game every session.</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="eyebrow" style="margin-bottom:14px;">The New-Speed Course Management Adjustment</div>
+    <ul class="cklist">
+      <li><strong>Re-map every par 4 on your home course</strong> — with new carry distances, which ones are now reachable in regulation that weren't before?</li>
+      <li><strong>Adjust your layup distances</strong> — if you're carrying it farther, your "safe" layup lands in different spots. Recalibrate the numbers</li>
+      <li><strong>Know your new short iron distances</strong> — 50/75/100/125 yard shots are now from different clubs. One session purely on these yardages</li>
+      <li><strong>Aim using the new miss pattern</strong> — if your dispersion has shifted with the new speed (likely), adjust your aim lines accordingly</li>
+      <li><strong>Don't chase distance on every hole</strong> — the speed is a tool, not a strategy. Club down when position matters more than distance</li>
+    </ul>
+
+    <hr>
+
+    <div class="eyebrow" style="margin-bottom:14px;">Confirmed Iron & Fairway Metal Data</div>
+    <table class="tbl">
+      <tr><th>Club</th><th>Carry</th><th>Ball Speed</th><th>Smash</th><th>Side</th><th>Notes</th></tr>
+      <tr><td>5i (T200)</td><td><strong>200.3 yds ✓</strong></td><td>130.9 mph</td><td>1.45</td><td>8.0R ⚠</td><td>Strong contact. 8R side spin is a consistent miss — aim left of center on approach shots</td></tr>
+      <tr><td>3W</td><td><strong>244 yds ✓ (mat)</strong></td><td>153.5 mph</td><td>1.47</td><td>—</td><td>Est. 234–236 yds real turf. On-course verification pending</td></tr>
+      <tr><td>7i (T200)</td><td><strong>178.9 yds ✓</strong></td><td>124.8 mph</td><td>1.42</td><td>—</td><td>+7 yds vs app (172). Spin 5,573 rpm — low end for 7i, monitor for trajectory issues under pressure</td></tr>
+      <tr><td>8i (T200)</td><td>163 yds (app)</td><td>—</td><td>—</td><td>—</td><td>From Trackman app — confirm at new swing speed</td></tr>
+      <tr><td>9i (T200)</td><td>146 yds (app)</td><td>—</td><td>—</td><td>—</td><td>From Trackman app — confirm at new swing speed</td></tr>
+      <tr><td>Hybrid</td><td>— yds</td><td>—</td><td>—</td><td>—</td><td>Not yet mapped at new swing speed</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--faint);margin-bottom:0;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;">✓ = confirmed this session · app = from Trackman app, may have shifted with new speed · ⚠ = flag for course management</p>
+
+    <div class="callout amber" style="margin-top:20px;">
+      <div class="callout-label">⚠ The 8R Miss on Your 5i — What It Means On Course</div>
+      8 yards right of target at 200 yards is a significant lateral miss. Combined with your known fade tendency, this is your dispersion pattern with long irons under the new swing speed. The fix on course is simple: aim your 5i at the left edge of the green or left half of the fairway on every shot. Don't fight it — aim around it. In the Phase 1 session, run the miss pattern recheck specifically on the 5i to see if this is consistent across the set or isolated to the long iron.
+    </div>
+
+    <hr>
+
+    <div class="eyebrow" style="margin-bottom:14px;">Round Log</div>
+
+    <table class="tbl" style="margin-bottom:16px;">
+      <tr><th>Date</th><th>Course</th><th>Score</th><th>Adj.</th><th>Out / In</th><th>SG Tee</th><th>SG App</th><th>SG Shrt</th><th>SG Putt</th><th>Notes</th></tr>
+      <tr>
+        <td>06/11/26</td>
+        <td>Marine Park GC<br><span style="font-size:10px;color:var(--faint);">White Tees · Brooklyn NY</span></td>
+        <td><strong>86</strong> (+14)</td>
+        <td>~81</td>
+        <td>40 / 46</td>
+        <td style="color:var(--red);">neg</td>
+        <td style="color:var(--red);">neg</td>
+        <td style="color:var(--red);">neg</td>
+        <td style="color:var(--volt);">pos ✓</td>
+        <td style="font-size:11px;line-height:1.6;">8 on H12 (2x OB left — MCL comp under fatigue). Ball-striking collapsed after H6. 70-ball pre-round in heat. Adj. score removes blow-up. Putting only green SG category. -3.3 SG vs 8 HCP.</td>
+      </tr>
+    </table>
+    <p style="font-size:12px;color:var(--faint);margin-bottom:0;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;">Adj. = estimated score removing blow-up holes (5+ over par on a single hole) · SG vs. 8.0 HCP benchmark</p>
+  </div>
+
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
